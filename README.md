@@ -540,7 +540,6 @@ ssh -i "ci-cd-key.pem" ubuntu@98.81.255.24
 pm2 list
 curl ifconfig.me (to find EC2 pubic ip)
 http://98.81.255.24:3000/
-
 ```
 
 
@@ -576,18 +575,21 @@ jobs:
     - name: Run Tests
       run: npm test
 
+    - name: Debug SSH Connection
+      run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} "echo Connected!"
+
     - name: Deploy to AWS EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
+        username: ubuntu  # Change if necessary
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ~/node-ci-cd || git clone https://github.com/Joy-it-code/node-ci-cd.git ~/node-ci-cd
           cd ~/node-ci-cd
           git pull origin main
           npm install
-          pm2 restart index.js || pm2 start index.js --name "node-app"
+          pm2 restart node-app || pm2 start index.js --name "node-app"
 ```
 
 
