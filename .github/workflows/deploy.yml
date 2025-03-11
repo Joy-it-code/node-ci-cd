@@ -21,13 +21,16 @@ jobs:
     - name: Install Dependencies
       run: npm ci
 
+    - name: Build Project
+      run: npm run build
+
     - name: Run Tests
       run: npm test
 
     - name: Set up SSH Key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ci-cd-key
+        echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/ci-cd-key
         chmod 600 ~/.ssh/ci-cd-key
         ssh-keyscan 98.81.255.24 >> ~/.ssh/known_hosts
 
@@ -41,5 +44,5 @@ jobs:
           cd ~/node-ci-cd || git clone https://github.com/Joy-it-code/node-ci-cd.git ~/node-ci-cd
           cd ~/node-ci-cd
           git pull origin main
-          npm install
-          pm2 restart index.js || pm2 start index.js --name "node-app"
+          npm ci
+          pm2 restart node-app || pm2 start index.js --name "node-app"

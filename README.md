@@ -598,7 +598,6 @@ jobs:
 
 **🛠 Testing the Application**
 
-
 * Steps to Set Up the Key
 
 ```
@@ -645,8 +644,17 @@ chmod 600 ~/.ssh/authorized_keys
 ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24
 ```
 
+**Test the workflow**
+Push changes to the main branch and check the Actions tab in GitHub to monitor the deployment process. 
+
+
 ## 5️⃣ Experiment and Learn:
 
-Test the Workflow:
-
-Push your changes to the main branch and check the Actions tab in GitHub to monitor the deployment process.
+**🔹Modify Workflows to See How Changes Affect the CI/CD Process**
+** Experiment: Add a Build Step**
+Modify .github/workflows/deploy.yml
+```
+    - name: Build Project
+      run: npm run build
+```
++ Push Changes to GitHub and monitor deployment
