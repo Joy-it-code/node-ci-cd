@@ -492,3 +492,114 @@ npm test
 npm start
 http://localhost:3000
 ```
++ Commit and Push
+```
+git add .github/workflows/node-ci.yml
+git commit -m "Add GitHub Actions workflow"
+git push origin main
+```
+
+**🌍 Deployment on AWS**
+
++ Set Up an EC2 Instance
++ Connect to the Instance
+```
+ssh -i ci-cd-key.pem ubuntu@<your-ec2-public-ip>
+```
+
++ **Update and Install Required Software On EC2:**
+```
+sudo apt update
+sudo apt install -y nodejs npm
+sudo npm install -g pm2
+sudo apt install -y git
+npm install --save-dev jest
+```
+
++ **Clone Your Repository**
+```
+git clone https://github.com/Joy-it-code/node-ci-cd.git
+cd node-ci-cd
+```
+
++ Start the App with PM2  
+
+Run the following command inside ~/node-ci-cd:
+```
+pm2 start index.js --name "node-app"
+pm2 save
+pm2 startup
+sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu --hp /home/ubuntu
+pm2 save
+sudo reboot
+```
+
++ Reconnect to the instance after the reboot using SSH:
+```
+ssh -i "ci-cd-key.pem" ubuntu@98.81.255.24
+pm2 list
+curl ifconfig.me (to find EC2 pubic ip)
+http://98.81.255.24:3000/
+
+```
+
+
++ Configure GitHub Actions for Deployment (Add new repository secrets).
+
++ **Update GitHub Actions for Deployment**
+
+Inside your project, create a .github/workflows/deploy.yml file:
+```
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v20
+      with:
+        node-version: 20
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Run Tests
+      run: npm test
+
+    - name: Deploy to AWS EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd ~/node-ci-cd || git clone https://github.com/Joy-it-code/node-ci-cd.git ~/node-ci-cd
+          cd ~/node-ci-cd
+          git pull origin main
+          npm install
+          pm2 restart index.js || pm2 start index.js --name "node-app"
+```
+
+
+**🛠 Testing the Application**
+
+Verify Deployment on local Terminal:
+```
+curl http://98.81.255.24:3000/
+```
+If it returns "Hello World!", the deployment was successful. 🎉
+
+## Experiment and Learn:
++ Test the Workflow:
+
+Push your changes to the main branch and check the Actions tab in GitHub to monitor the deployment process.
