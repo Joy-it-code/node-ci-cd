@@ -12,4 +12,8 @@ if (require.main === module) {
     });
 }
 
+test("Deliberate Failure", () => {
+  expect(1 + 1).toBe(3); // Incorrect assertion
+});
+
 module.exports = app; // Export app for testing

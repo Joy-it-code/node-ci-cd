@@ -651,6 +651,13 @@ Push changes to the main branch and check the Actions tab in GitHub to monitor t
 ## 5️⃣ Experiment and Learn:
 
 **🔹Modify Workflows to See How Changes Affect the CI/CD Process**
++ Experiment: Introduce an Intentional Failure
 
+Modify index.test.js:
+```
+test("Deliberate Failure", () => {
+  expect(1 + 1).toBe(3); // Incorrect assertion
+});
+```
 
 + Push Changes to GitHub and monitor deployment
