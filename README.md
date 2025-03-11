@@ -566,7 +566,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Node.js
-      uses: actions/setup-node@v20
+      uses: actions/setup-node@v4
       with:
         node-version: 20
 
@@ -599,7 +599,7 @@ curl http://98.81.255.24:3000/
 ```
 If it returns "Hello World!", the deployment was successful. 🎉
 
-## Experiment and Learn:
+## 5️⃣ Experiment and Learn:
 + Test the Workflow:
 
 Push your changes to the main branch and check the Actions tab in GitHub to monitor the deployment process.
