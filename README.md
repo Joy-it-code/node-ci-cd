@@ -575,33 +575,62 @@ jobs:
     - name: Run Tests
       run: npm test
 
-    - name: Debug SSH Connection
-      run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} "echo Connected!"
+    - name: Set up SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/ci-cd-key
+        chmod 600 ~/.ssh/ci-cd-key
+        ssh-keyscan 98.81.255.24 >> ~/.ssh/known_hosts
 
     - name: Deploy to AWS EC2
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ubuntu  # Change if necessary
+        host: 98.81.255.24
+        username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ~/node-ci-cd || git clone https://github.com/Joy-it-code/node-ci-cd.git ~/node-ci-cd
           cd ~/node-ci-cd
           git pull origin main
           npm install
-          pm2 restart node-app || pm2 start index.js --name "node-app"
+          pm2 restart index.js || pm2 start index.js --name "node-app"
 ```
-
 
 **🛠 Testing the Application**
 
-Verify Deployment on local Terminal:
+
+* Steps to Set Up the Key
+
+```
+find ~/ -name "ci-cd-key.pem"
+mv ~/Downloads/ci-cd-key.pem ~/.ssh/ci-cd-key.pem
+ls ~/.ssh/
+chmod 600 ~/.ssh/ci-cd-key.pem
+ssh -o StrictHostKeyChecking=no -i ~/.ssh/ci-cd-key.pem ubuntu@<IP_ADDRESS> "echo Connected!"
+```
+
++ Verify Your Application is Running on EC2
+```
+ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24 "pm2 list"
+```
++ Restart Application if not Running:
+```
+ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24 "cd ~/node-ci-cd && pm2 start index.js --name 'node-app'"
+```
+
++ Verify Deployment on local Terminal:
 ```
 curl http://98.81.255.24:3000/
 ```
 If it returns "Hello World!", the deployment was successful. 🎉
 
++ Check if the App is Accessible via the Browser:
+```
+http://98.81.255.24:3000
+```
+
 ## 5️⃣ Experiment and Learn:
-+ Test the Workflow:
+
+Test the Workflow:
 
 Push your changes to the main branch and check the Actions tab in GitHub to monitor the deployment process.

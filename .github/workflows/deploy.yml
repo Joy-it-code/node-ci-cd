@@ -24,18 +24,22 @@ jobs:
     - name: Run Tests
       run: npm test
 
-    - name: Debug SSH Connection
-      run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} "echo Connected!"
+    - name: Set up SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/ci-cd-key
+        chmod 600 ~/.ssh/ci-cd-key
+        ssh-keyscan 98.81.255.24 >> ~/.ssh/known_hosts
 
     - name: Deploy to AWS EC2
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ubuntu  # Change if necessary
+        host: 98.81.255.24
+        username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ~/node-ci-cd || git clone https://github.com/Joy-it-code/node-ci-cd.git ~/node-ci-cd
           cd ~/node-ci-cd
           git pull origin main
           npm install
-          pm2 restart node-app || pm2 start index.js --name "node-app"
+          pm2 restart index.js || pm2 start index.js --name "node-app"
