@@ -66,6 +66,6 @@ node index.js
 Add your changes to Git and push them to the GitHub repository:
 ```
 git add .
-git commit -m "Initial commit with Node.js app"
+git commit -m "Initial commit"
 git push origin main
 ```
