@@ -578,14 +578,14 @@ jobs:
     - name: Set up SSH Key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/ci-cd-key
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ci-cd-key
         chmod 600 ~/.ssh/ci-cd-key
         ssh-keyscan 98.81.255.24 >> ~/.ssh/known_hosts
 
     - name: Deploy to AWS EC2
       uses: appleboy/ssh-action@master
       with:
-        host: 98.81.255.24
+        host: ${{ secrets.EC2_HOST }}
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
@@ -627,6 +627,22 @@ If it returns "Hello World!", the deployment was successful. 🎉
 + Check if the App is Accessible via the Browser:
 ```
 http://98.81.255.24:3000
+```
+
+ssh -i "~/.ssh/ci-cd-key.pem" ubuntu@98.81.255.24
+chmod 600 ~/.ssh/ci-cd-key.pem
+ls ~/.ssh/
+cat ~/.ssh/authorized_keys
+ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24
+
++ Check for permission on local machine
+```
+chmod 600 ~/.ssh/ci-cd-key.pem
+```
+Server-Side Permissions and Verification on Local Machine:
+```
+chmod 600 ~/.ssh/authorized_keys
+ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24
 ```
 
 ## 5️⃣ Experiment and Learn:
