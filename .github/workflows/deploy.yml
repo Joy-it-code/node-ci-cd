@@ -29,7 +29,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ci-cd-key
         chmod 600 ~/.ssh/ci-cd-key
-        ssh-keyscan 98.81.255.24 >> ~/.ssh/known_hosts
+        ssh-keyscan 3.84.94.37 >> ~/.ssh/known_hosts
 
     - name: Deploy to AWS EC2
       uses: appleboy/ssh-action@master

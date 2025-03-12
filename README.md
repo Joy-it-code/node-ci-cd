@@ -1,4 +1,4 @@
-# Node.js CI/CD with GitHub Actions and AWS
+# Node.js CI/CD wi th GitHub Actions and AWS
 
 ## 🚀 Project Overview
 This project demonstrates a Continuous Integration (CI) and Continuous Deployment (CD) pipeline for a Node.js application using GitHub Actions and AWS EC2. The goal is to automate the testing, building, and deployment process to ensure reliable and efficient software delivery.
@@ -84,6 +84,7 @@ Start your server by running:
 node index.js
 ```
 + Navigate to http://localhost:3000 in your browser to ensure it says "Hello World!".
+
 ![](./img/2d.node.index.png)
 ![](./img/2e.local.3000.png)
 
@@ -138,6 +139,10 @@ jobs:
         run: npm test
 ```
 
+**Run Tests**
+```
+npm test
+```
 + Commit and push the workflow
 ```
 git add .github/workflows/node-ci.yml
@@ -151,7 +156,7 @@ Go to the Actions tab in your GitHub repository to see if the workflow runs succ
 
 ## 4️⃣ Adding Testing and Deployment:
 
-**🔹Add Testing**
+**🧪Add Testing**
 
 Install Jest as a development dependency and verify:
 ```
@@ -168,6 +173,7 @@ npx jest --version
     "test": "jest"
 }
 ```
+
 + **Create a tests Directory and Add Test Cases**
 Create a tests/app.test.js file and add a simple test:
 
@@ -231,9 +237,13 @@ git push origin main
 **🌍 Deployment on AWS**
 
 + Set Up an EC2 Instance
-+ Connect to the Instance
++ Connect to the Instance 
++ Clone the Repository
 ```
 ssh -i ci-cd-key.pem ubuntu@<your-ec2-public-ip>
+git clone https://github.com/your-username/node-ci-cd.git
+cd node-ci-cd
+
 ```
 
 + **Update and Install Required Software On EC2:**
@@ -263,12 +273,17 @@ pm2 save
 sudo reboot
 ```
 
+**Check Running Processes**
+```
+pm2 list
+```
+
 + Reconnect to the instance after the reboot using SSH:
 ```
-ssh -i "ci-cd-key.pem" ubuntu@98.81.255.24
+ssh -i "ci-cd-key.pem" ubuntu@<your-ec2-public-ip>
 pm2 list
 curl ifconfig.me (to find EC2 pubic ip)
-http://98.81.255.24:3000/
+http://<your-ec2-public-ip>:3000/
 ```
 
 
@@ -309,7 +324,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ci-cd-key
         chmod 600 ~/.ssh/ci-cd-key
-        ssh-keyscan 98.81.255.24 >> ~/.ssh/known_hosts
+        ssh-keyscan <your-ec2-public-ip> >> ~/.ssh/known_hosts
 
     - name: Deploy to AWS EC2
       uses: appleboy/ssh-action@master
@@ -339,29 +354,31 @@ ssh -o StrictHostKeyChecking=no -i ~/.ssh/ci-cd-key.pem ubuntu@<IP_ADDRESS> "ech
 
 + Verify Your Application is Running on EC2
 ```
-ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24 "pm2 list"
+ssh -i ~/.ssh/ci-cd-key.pem ubuntu@<your-ec2-public-ip> "pm2 list"
 ```
 + Restart Application if not Running:
 ```
-ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24 "cd ~/node-ci-cd && pm2 start index.js --name 'node-app'"
+ssh -i ~/.ssh/ci-cd-key.pem ubuntu@<your-ec2-public-ip> 
+cd ~/node-ci-cd && pm2 start index.js --name 'node-app'
 ```
 
-+ Verify Deployment on local Terminal:
+**🔍 Testing API Endpoint**
+📌 Check in Terminal:
 ```
-curl http://98.81.255.24:3000/
+curl http://<your-ec2-public-ip>:3000/
 ```
 If it returns "Hello World!", the deployment was successful. 🎉
 
 + Check if the App is Accessible via the Browser:
 ```
-http://98.81.255.24:3000
+http://<your-ec2-public-ip>:3000
 ```
 
-ssh -i "~/.ssh/ci-cd-key.pem" ubuntu@98.81.255.24
+ssh -i "~/.ssh/ci-cd-key.pem" ubuntu@<your-ec2-public-ip>
 chmod 600 ~/.ssh/ci-cd-key.pem
 ls ~/.ssh/
 cat ~/.ssh/authorized_keys
-ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24
+ssh -i ~/.ssh/ci-cd-key.pem ubuntu@<your-ec2-public-ip>
 
 + Check for permission on local machine
 ```
@@ -370,7 +387,8 @@ chmod 600 ~/.ssh/ci-cd-key.pem
 Server-Side Permissions and Verification on Local Machine:
 ```
 chmod 600 ~/.ssh/authorized_keys
-ssh -i ~/.ssh/ci-cd-key.pem ubuntu@98.81.255.24
+ssh -i ~/.ssh/ci-cd-key.pem
+ubuntu@<your-ec2-public-ip>
 ```
 
 **Test the workflow**
@@ -394,7 +412,7 @@ test("Deliberate Failure", () => {
 + Check if GitHub Actions marks the job as failed
 + Revert the change and push again to verify it passes
 
-**Add Unit Tests (For Individual Functions)**
+**🧪Add Unit Tests (For Individual Functions)**
 
 Unit tests check small parts of your code independently.
 
@@ -438,9 +456,9 @@ Run the Test
 npm test
 ```
 
-**Add Integration Tests (For Multiple Modules)**
+**Add 🔄Integration Tests (For Multiple Modules)**
 
-Integration tests check how different parts of your application work together.
++ Integration tests check how different parts of your application work together.
 
 + Modify tests/integration.test.js:
 ```
