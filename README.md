@@ -7,7 +7,28 @@ This project demonstrates a Continuous Integration (CI) and Continuous Deploymen
 * CI with GitHub Actions: Automates testing and building on every commit and pull request.
 * CD to AWS EC2: Deploys the Node.js application to an EC2 instance automatically.
 * Version Control with GitHub: Ensures collaboration and code management.
-* Process Management with PM2: Keeps the application running after deployment.
+* Process Management with PM2: Keeps the application running after deployment. 
+
+## 🔧 Prerequisites
+
+* 🖥️ Local Machine Requirements
+
+* Node.js (version 20 recommended)
+
+* Git
+
+* VS Code
+
+* A GitHub account
+
+* ☁️ AWS Requirements
+
+* An AWS account
+
+* AWS EC2 instance (Ubuntu 22.04 LTS recommended)
+
+* SSH key for secure deployment
+
 
 ## 📂 Project Setup
 
@@ -416,3 +437,50 @@ Run the Test
 ```
 npm test
 ```
+
+**Add Integration Tests (For Multiple Modules)**
+
+Integration tests check how different parts of your application work together.
+
++ Modify tests/integration.test.js:
+```
+const request = require("supertest");
+const app = require("../index");
+
+test("GET / should return Hello World!", async () => {
+  const response = await request(app).get("/");
+  expect(response.status).toBe(200);
+  expect(response.text).toBe("Hello World!");
+});
+```
+
+Run Test and Push to GitHub:
+```
+npm test
+```
+![](./img/3.npm.pass.png)
+
+
+## ❗ Troubleshooting
+
+If SSH fails, verify the key permissions:
+```
+chmod 400 aws-key.pem
+```
+
+If deployment fails, check logs in EC2:
+```
+pm2 logs
+```
+
+**Test the workflow**
+Push changes to the main branch and check the Actions tab in GitHub to monitor the deployment process. 
+
+## Conclusion
+
+This project showcases a streamlined CI/CD process for Node.js applications, integrating automated testing, deployment, and process management. By leveraging GitHub Actions and PM2, the pipeline ensures reliable and scalable deployments with minimal manual intervention.
+
+
+**📌 Author: Joy**
+
+**🎉 Happy Coding! 🚀**
