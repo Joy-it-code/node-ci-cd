@@ -361,7 +361,7 @@ Push changes to the main branch and check the Actions tab in GitHub to monitor t
 **🔹Modify Workflows to See How Changes Affect the CI/CD Process**
 + Experiment: Introduce an Intentional Failure
 
-Modify index.test.js:
++ Modify index.test.js:
 ```
 test("Deliberate Failure", () => {
   expect(1 + 1).toBe(3); // Incorrect assertion
@@ -373,3 +373,46 @@ test("Deliberate Failure", () => {
 + Check if GitHub Actions marks the job as failed
 + Revert the change and push again to verify it passes
 
+**Add Unit Tests (For Individual Functions)**
+
+Unit tests check small parts of your code independently.
+
++ Create tests/unit.test.js
+
+Install Jest (Test Framework)
+```
+npm install --save-dev jest
+```
+
++ Update package.json (Add Test Script)
+Open your package.json and add this under "scripts":
+
+```
+"scripts": {
+  "start": "node index.js",
+  "test": "jest"
+}
+```
++ Run Test
+```
+npm test
+```
+ + Create a tests/unit.test.js File
+```
+mkdir -p tests
+touch tests/unit.test.js
+```
+
++ Then, open tests/unit.test.js and add:
+```
+// Import the function you want to test
+const sum = (a, b) => a + b; // Example function
+
+test('adds 2 + 3 to equal 5', () => {
+  expect(sum(2, 3)).toBe(5);
+});
+```
+Run the Test
+```
+npm test
+```
