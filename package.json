@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Joy-it-code/node-ci-cd.git"
+    "url": "git+https://github.com/Joy-it-code/node-ci-cd-2.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Joy-it-code/node-ci-cd/issues"
+    "url": "https://github.com/Joy-it-code/node-ci-cd-2/issues"
   },
-  "homepage": "https://github.com/Joy-it-code/node-ci-cd#readme",
+  "homepage": "https://github.com/Joy-it-code/node-ci-cd-2#readme",
   "dependencies": {
     "express": "^4.21.2",
     "pm2": "^5.4.3"
