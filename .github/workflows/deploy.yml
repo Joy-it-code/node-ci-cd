@@ -31,7 +31,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          cd ~/node-ci-cd || git clone https://github.com/<your-github-username>/<your-repo>.git ~/node-ci-cd
+          cd ~/node-ci-cd || git clone https://github.com/Joy-it-code/node-ci-cd.git ~/node-ci-cd
           cd ~/node-ci-cd
           git pull origin main
           npm install
